@@ -18,3 +18,11 @@ export const COLORS = {
   primary: "primary",
   secondary: "secondary",
 };
+
+export const CountriesArr = [
+  { name: "Brazil", code: "BR" },
+  { name: "Australia", code: "AU" },
+  { name: "Canada", code: "CA" },
+  { name: "Germany", code: "DE" },
+  { name: "Spain", code: "ES" },
+];

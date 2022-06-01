@@ -13,7 +13,7 @@ const Button = ({
   return (
     <MuiButton
       onClick={onClick}
-      color={color}
+      color="default"
       disabled={disabled}
       size={size}
       variant={variant}

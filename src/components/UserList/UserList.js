@@ -4,12 +4,14 @@ import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import { CountriesArr } from "constant";
 import * as S from "./style";
 
-const UserList = ({ users, isLoading }) => {
+const UserList = ({ users, isLoading, nationalityParams, setNationalityParams }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
 
   const handleMouseEnter = (index) => {
+    console.log(index);
     setHoveredUserId(index);
   };
 
@@ -17,22 +19,40 @@ const UserList = ({ users, isLoading }) => {
     setHoveredUserId();
   };
 
+  const filterByCountry = (isChecked, value) => {
+    if (isChecked) {
+      nationalityParams.find((nat) => nat == value) ||
+        setNationalityParams([...nationalityParams, value]);
+    } else {
+      let indexOfCurrNat = nationalityParams.indexOf(value);
+      indexOfCurrNat > -1 && nationalityParams.splice(indexOfCurrNat, 1);
+      setNationalityParams([...nationalityParams]);
+    }
+  };
+
+  const AddRemoveFromFavs = (index) => {
+    console.log("FAV");
+    handleMouseEnter(index);
+  };
+
   return (
     <S.UserList>
       <S.Filters>
-        <CheckBox value="BR" label="Brazil" />
-        <CheckBox value="AU" label="Australia" />
-        <CheckBox value="CA" label="Canada" />
-        <CheckBox value="DE" label="Germany" />
+        {CountriesArr.map((countryObj, index) => {
+          return (
+            <CheckBox
+              key={index}
+              value={countryObj.code}
+              label={countryObj.name}
+              onChange={filterByCountry}
+            />
+          );
+        })}
       </S.Filters>
       <S.List>
         {users.map((user, index) => {
           return (
-            <S.User
-              key={index}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-            >
+            <S.User key={index} onMouseEnter={() => handleMouseEnter(index)}>
               <S.UserPicture src={user?.picture.large} alt="" />
               <S.UserInfo>
                 <Text size="22px" bold>
@@ -47,7 +67,7 @@ const UserList = ({ users, isLoading }) => {
                 </Text>
               </S.UserInfo>
               <S.IconButtonWrapper isVisible={index === hoveredUserId}>
-                <IconButton>
+                <IconButton onClick={() => AddRemoveFromFavs(index)}>
                   <FavoriteIcon color="error" />
                 </IconButton>
               </S.IconButtonWrapper>
