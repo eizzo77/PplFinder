@@ -54,6 +54,8 @@
     "@babel/plugin-syntax-jsx": "^7.17.12",
     "@babel/preset-react": "^7.17.12",
     "babel-eslint": "^10.1.0",
-    "gh-pages": "^4.0.0"
+    "gh-pages": "^4.0.0",
+    "install": "^0.13.0",
+    "npm": "^8.12.0"
   }
 }
