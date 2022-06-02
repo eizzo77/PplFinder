@@ -1,5 +1,6 @@
 {
   "name": "ppl-finder",
+  "homepage": "http://eizzo77.github.io/PplFinder",
   "version": "1.0.7",
   "bin": "./bin/cli.js",
   "license": "MIT",
@@ -24,6 +25,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -50,6 +53,7 @@
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.17.12",
     "@babel/preset-react": "^7.17.12",
-    "babel-eslint": "^10.1.0"
+    "babel-eslint": "^10.1.0",
+    "gh-pages": "^4.0.0"
   }
 }
