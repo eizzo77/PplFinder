@@ -8,6 +8,10 @@ const ThemeProvider = ({ children }) => {
       root: {
         backgroundColor: "#303030",
       },
+      a: {
+        textDecoration: "none",
+        color: "#84ffff",
+      },
     },
   };
   const theme = React.useMemo(

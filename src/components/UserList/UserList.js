@@ -1,38 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useRef, useState, useCallback } from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { CountriesArr } from "constant";
+import { PageNumberContext } from "../../AppContexts/PageNumberContext";
+import { FavoritesContext } from "../../AppContexts/FavoriteListContext";
+import { NationalitiesContext } from "../../AppContexts/NationalitiesContext";
 import * as S from "./style";
 
-const UserList = ({ users, isLoading, nationalityParams, setNationalityParams }) => {
+const UserList = ({ users, isLoading }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
+  const { setPageNumber } = useContext(PageNumberContext);
+  const { favorites, addToFavorites } = useContext(FavoritesContext);
+  const { filterByCountry } = useContext(NationalitiesContext);
+  const obs = useRef();
+
+  const lastUserRef = useCallback((node) => {
+    if (obs.current) {
+      obs.current.disconnect();
+    }
+    obs.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setPageNumber((prevPageNumber) => prevPageNumber + 1);
+      }
+    });
+    if (node) obs.current.observe(node);
+  }, []);
 
   const handleMouseEnter = (index) => {
-    console.log(index);
     setHoveredUserId(index);
   };
 
   const handleMouseLeave = () => {
     setHoveredUserId();
-  };
-
-  const filterByCountry = (isChecked, value) => {
-    if (isChecked) {
-      nationalityParams.find((nat) => nat == value) ||
-        setNationalityParams([...nationalityParams, value]);
-    } else {
-      let indexOfCurrNat = nationalityParams.indexOf(value);
-      indexOfCurrNat > -1 && nationalityParams.splice(indexOfCurrNat, 1);
-      setNationalityParams([...nationalityParams]);
-    }
-  };
-
-  const AddRemoveFromFavs = (index) => {
-    console.log("FAV");
-    handleMouseEnter(index);
   };
 
   return (
@@ -52,7 +54,12 @@ const UserList = ({ users, isLoading, nationalityParams, setNationalityParams })
       <S.List>
         {users.map((user, index) => {
           return (
-            <S.User key={index} onMouseEnter={() => handleMouseEnter(index)}>
+            <S.User
+              key={index}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={handleMouseLeave}
+              ref={index + 1 == users.length ? lastUserRef : null}
+            >
               <S.UserPicture src={user?.picture.large} alt="" />
               <S.UserInfo>
                 <Text size="22px" bold>
@@ -66,8 +73,10 @@ const UserList = ({ users, isLoading, nationalityParams, setNationalityParams })
                   {user?.location.city} {user?.location.country}
                 </Text>
               </S.UserInfo>
-              <S.IconButtonWrapper isVisible={index === hoveredUserId}>
-                <IconButton onClick={() => AddRemoveFromFavs(index)}>
+              <S.IconButtonWrapper
+                isVisible={index === hoveredUserId || favorites.includes(user)}
+              >
+                <IconButton onClick={() => addToFavorites(user)}>
                   <FavoriteIcon color="error" />
                 </IconButton>
               </S.IconButtonWrapper>

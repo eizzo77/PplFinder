@@ -1,23 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { NationalitiesContext } from "../AppContexts/NationalitiesContext";
+import { PageNumberContext } from "../AppContexts/PageNumberContext";
 
 export const usePeopleFetch = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [nationalityParams, setNationalityParams] = useState([]);
+  const { nationalityParams } = useContext(NationalitiesContext);
+  const { pageNumber, setPageNumber } = useContext(PageNumberContext);
 
   useEffect(() => {
+    users.length = 0;
+    setPageNumber(1);
     fetchUsers();
   }, [nationalityParams]);
 
+  useEffect(() => {
+    fetchUsers();
+  }, [pageNumber]);
+
   async function fetchUsers() {
     setIsLoading(true);
-    let path = `https://randomuser.me/api/?results=25&&page=1&nat=${nationalityParams.join()}`;
+    let path = `https://randomuser.me/api/?results=25&&page=${pageNumber}&nat=${nationalityParams.join()}`;
     const response = await axios.get(path);
-    console.log(path);
     setIsLoading(false);
-    setUsers(response.data.results);
+    setUsers([...users, ...response.data.results]);
   }
 
-  return { users, isLoading, fetchUsers, nationalityParams, setNationalityParams };
+  return { users, isLoading };
 };

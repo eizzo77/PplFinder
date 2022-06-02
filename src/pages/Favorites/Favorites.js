@@ -1,28 +1,20 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import Text from "components/Text";
-import UserList from "components/UserList";
-import { usePeopleFetch } from "hooks";
+import FavoritesList from "components/FavoritesList";
 import * as S from "./style";
 
-const Favorites = () => {
-  const { users, isLoading, nationalityParams, setNationalityParams } = usePeopleFetch();
-
+const Favorites = (favorites) => {
   return (
-    <S.Home>
+    <S.Favorites>
       <S.Content>
         <S.Header>
           <Text size="64px" bold>
             Favorites
           </Text>
         </S.Header>
-        <UserList
-          users={users}
-          isLoading={isLoading}
-          setNationalityParams={setNationalityParams}
-          nationalityParams={nationalityParams}
-        />
+        <FavoritesList favorites={favorites} />
       </S.Content>
-    </S.Home>
+    </S.Favorites>
   );
 };
 

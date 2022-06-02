@@ -26,3 +26,8 @@ export const CountriesArr = [
   { name: "Germany", code: "DE" },
   { name: "Spain", code: "ES" },
 ];
+
+export const Paths = [
+  { label: "Home", location: "/" },
+  { label: "Favorites", location: "/Favorites" },
+];

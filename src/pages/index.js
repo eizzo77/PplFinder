@@ -1,2 +1,2 @@
 export { default as Home } from "./Home";
-export { Favorites } from "./Favorites";
+export { default as Favorites } from "./Favorites";
